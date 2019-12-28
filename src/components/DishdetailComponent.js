@@ -10,18 +10,19 @@ class DishDetail extends Component {
     }
 
     render() {
-        if (this.props.selectedDish != null) {
+        if (this.props.dish != null) {
 
             return (
-                <div className="row">
-                    <div key={this.props.selectedDish.id} className="col-12 col-md-5 m-2">
-                        {this.renderDish(this.props.selectedDish)}
-                    </div>
-                    <div className="col-12 col-md-5 m-2">
-                        {this.renderComments(this.props.selectedDish)}
+                <div className="container">
+                    <div className="row">
+                        <div key={this.props.dish.id} className="col-12 col-md-5 m-2">
+                            {this.renderDish(this.props.dish)}
+                        </div>
+                        <div className="col-12 col-md-5 m-2">
+                            {this.renderComments(this.props.dish)}
+                        </div>
                     </div>
                 </div>
-
             );
         } else {
             return (
@@ -35,7 +36,7 @@ class DishDetail extends Component {
         if(dish !=null){
             return(
                 <Card>
-                    <CardImg width="100%" src={dish.image}
+                    <CardImg src={dish.image}
                              alt={dish.name}/>
                     <CardBody>
                         <CardTitle>{dish.name}</CardTitle>
@@ -58,7 +59,8 @@ class DishDetail extends Component {
                         <ul className="list-unstyled">
                             <li>{comment.comment}</li>
                             <br/>
-                            <li>-- {comment.author} {this.getDate(comment.date)}</li>
+                            <li>-- {comment.author} , {new Intl.DateTimeFormat('en-US',
+                                {year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</li>
                         </ul>
                     </div>
                 )
