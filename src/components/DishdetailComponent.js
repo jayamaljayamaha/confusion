@@ -35,11 +35,10 @@ class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        console.log("Current state is: " + JSON.stringify(values));
-        alert("Current state is: " + JSON.stringify(values));
-
+        this.props.addComments(this.props.dishId, values.rating, values.author, values.comment)
     }
     render() {
+
         return (
             <div>
                 <Button outline onClick={() => this.toggleModal()}>
@@ -61,8 +60,8 @@ class CommentForm extends Component {
                                     </Control.select>
                                 </Row>
                                 <Row className="form-group">
-                                    <Label htmlFor="yourName">Your Name</Label>
-                                    <Control.text model=".yourName" id="yourName" name="yourName" placeholder="Your Name"
+                                    <Label htmlFor="author">Your Name</Label>
+                                    <Control.text model=".author" id="author" name="author" placeholder="Your Name"
                                            className="form-control"
                                            validators={{
                                                required, minLength: minLength(3), maxLength: maxLength(15)
@@ -93,7 +92,7 @@ class CommentForm extends Component {
     }
 }
 
-function RenderDishDetails({dish, comments}) {
+function RenderDishDetails({dish, comments, addComments}) {
     if (dish != null) {
 
         return (
@@ -115,7 +114,9 @@ function RenderDishDetails({dish, comments}) {
                         <RenderDish dish={dish}/>
                     </div>
                     <div className="col-12 col-md-5 m-2">
-                        <RenderComments comments={comments}/>
+                        <RenderComments comments={comments}
+                                        addComments={addComments}
+                                        dishId={dish.id}/>
                     </div>
                 </div>
             </div>
@@ -146,7 +147,7 @@ function RenderDish({dish}) {
     }
 }
 
-function RenderComments({comments, onClick}) {
+function RenderComments({comments, addComments, dishId}) {
     if (comments != null) {
         const AllComments = comments.map((comment) => {
             return (
@@ -170,7 +171,7 @@ function RenderComments({comments, onClick}) {
                 <CardBody>
                     <CardTitle><h4>Comments</h4></CardTitle>
                     <CardText>{AllComments}</CardText>
-                    <CommentForm/>
+                    <CommentForm dishId={dishId} addComments={addComments}/>
                 </CardBody>
             </Card>
         )
