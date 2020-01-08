@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import {Link} from 'react-router-dom'
 import {Control, LocalForm, Errors} from "react-redux-form";
+import { Loading } from './LoadingComponent';
 
 const required = (value) => value && value.length;
 const maxLength = (len) => (value) => (!value) || (value.length <= len);
@@ -92,9 +93,26 @@ class CommentForm extends Component {
     }
 }
 
-function RenderDishDetails({dish, comments, addComments}) {
+function RenderDishDetails({dish, comments, addComments, isLoading, ErrMsg}) {
+    if(isLoading){
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading/>
+                </div>
+            </div>
+        );
+    }
+    else if(ErrMsg){
+        return(
+            <div className="container">
+                <div className="row">
+                    <h4>{ErrMsg}</h4>
+                </div>
+            </div>
+        );
+    }
     if (dish != null) {
-
         return (
             <div className="container">
                 <div className="row">
