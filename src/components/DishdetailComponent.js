@@ -14,6 +14,7 @@ import {Link} from 'react-router-dom'
 import {Control, LocalForm, Errors} from "react-redux-form";
 import { Loading } from './LoadingComponent';
 import { baseUrl } from "../shared/baseUrl";
+import {postComment} from "../redux/ActionCreators";
 
 const required = (value) => value && value.length;
 const maxLength = (len) => (value) => (!value) || (value.length <= len);
@@ -37,7 +38,7 @@ class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComments(this.props.dishId, values.rating, values.author, values.comment)
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment)
     }
     render() {
 
@@ -94,7 +95,7 @@ class CommentForm extends Component {
     }
 }
 
-function RenderDishDetails({dish, comments, addComments, isLoading, ErrMsg}) {
+function RenderDishDetails({dish, comments, postComment, isLoading, ErrMsg}) {
     if(isLoading){
         return (
             <div className="container">
@@ -134,7 +135,7 @@ function RenderDishDetails({dish, comments, addComments, isLoading, ErrMsg}) {
                     </div>
                     <div className="col-12 col-md-5 m-2">
                         <RenderComments comments={comments}
-                                        addComments={addComments}
+                                        postComment={postComment}
                                         dishId={dish.id}/>
                     </div>
                 </div>
@@ -166,7 +167,7 @@ function RenderDish({dish}) {
     }
 }
 
-function RenderComments({comments, addComments, dishId}) {
+function RenderComments({comments, postComment, dishId}) {
     if (comments != null) {
         const AllComments = comments.map((comment) => {
             return (
@@ -190,7 +191,7 @@ function RenderComments({comments, addComments, dishId}) {
                 <CardBody>
                     <CardTitle><h4>Comments</h4></CardTitle>
                     <CardText>{AllComments}</CardText>
-                    <CommentForm dishId={dishId} addComments={addComments}/>
+                    <CommentForm dishId={dishId} postComment={postComment}/>
                 </CardBody>
             </Card>
         )
