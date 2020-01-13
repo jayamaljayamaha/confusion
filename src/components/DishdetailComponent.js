@@ -12,9 +12,10 @@ import {
 } from "reactstrap";
 import {Link} from 'react-router-dom'
 import {Control, LocalForm, Errors} from "react-redux-form";
-import { Loading } from './LoadingComponent';
-import { baseUrl } from "../shared/baseUrl";
+import {Loading} from './LoadingComponent';
+import {baseUrl} from "../shared/baseUrl";
 import {postComment} from "../redux/ActionCreators";
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 
 const required = (value) => value && value.length;
 const maxLength = (len) => (value) => (!value) || (value.length <= len);
@@ -40,6 +41,7 @@ class CommentForm extends Component {
         this.toggleModal();
         this.props.postComment(this.props.dishId, values.rating, values.author, values.comment)
     }
+
     render() {
 
         return (
@@ -65,10 +67,10 @@ class CommentForm extends Component {
                                 <Row className="form-group">
                                     <Label htmlFor="author">Your Name</Label>
                                     <Control.text model=".author" id="author" name="author" placeholder="Your Name"
-                                           className="form-control"
-                                           validators={{
-                                               required, minLength: minLength(3), maxLength: maxLength(15)
-                                           }}/>
+                                                  className="form-control"
+                                                  validators={{
+                                                      required, minLength: minLength(3), maxLength: maxLength(15)
+                                                  }}/>
                                     <Errors model={".yourName"}
                                             className="text-danger"
                                             show="touched"
@@ -96,7 +98,7 @@ class CommentForm extends Component {
 }
 
 function RenderDishDetails({dish, comments, postComment, isLoading, ErrMsg}) {
-    if(isLoading){
+    if (isLoading) {
         return (
             <div className="container">
                 <div className="row">
@@ -104,9 +106,8 @@ function RenderDishDetails({dish, comments, postComment, isLoading, ErrMsg}) {
                 </div>
             </div>
         );
-    }
-    else if(ErrMsg){
-        return(
+    } else if (ErrMsg) {
+        return (
             <div className="container">
                 <div className="row">
                     <h4>{ErrMsg}</h4>
@@ -137,6 +138,7 @@ function RenderDishDetails({dish, comments, postComment, isLoading, ErrMsg}) {
                         <RenderComments comments={comments}
                                         postComment={postComment}
                                         dishId={dish.id}/>
+
                     </div>
                 </div>
             </div>
@@ -151,14 +153,18 @@ function RenderDishDetails({dish, comments, postComment, isLoading, ErrMsg}) {
 function RenderDish({dish}) {
     if (dish != null) {
         return (
-            <Card>
-                <CardImg src={baseUrl + dish.image}
-                         alt={dish.name}/>
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
+            <FadeTransform in transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
+                <Card>
+                    <CardImg src={baseUrl + dish.image}
+                             alt={dish.name}/>
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
         )
     } else {
         return (
@@ -171,18 +177,16 @@ function RenderComments({comments, postComment, dishId}) {
     if (comments != null) {
         const AllComments = comments.map((comment) => {
             return (
-                <div key={comment.id}>
-                    <ul className="list-unstyled">
-                        <li>{comment.comment}</li>
-                        <br/>
-                        <li>-- {comment.author} , {new Intl.DateTimeFormat('en-US',
-                            {
-                                year: 'numeric',
-                                month: 'short',
-                                day: '2-digit'
-                            }).format(new Date(Date.parse(comment.date)))}</li>
-                    </ul>
-                </div>
+                <Fade in>
+                    <li>{comment.comment}</li>
+                    <li>-- {comment.author} , {new Intl.DateTimeFormat('en-US',
+                        {
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit'
+                        }).format(new Date(Date.parse(comment.date)))}</li>
+                    <br/>
+                </Fade>
             )
         });
 
@@ -190,7 +194,13 @@ function RenderComments({comments, postComment, dishId}) {
             <Card>
                 <CardBody>
                     <CardTitle><h4>Comments</h4></CardTitle>
-                    <CardText>{AllComments}</CardText>
+                    <CardText>
+                        <ul className="list-unstyled">
+                            <Stagger in>
+                                {AllComments}
+                            </Stagger>
+                        </ul>
+                    </CardText>
                     <CommentForm dishId={dishId} postComment={postComment}/>
                 </CardBody>
             </Card>
@@ -201,7 +211,6 @@ function RenderComments({comments, postComment, dishId}) {
         )
     }
 }
-
 
 
 export default RenderDishDetails;
