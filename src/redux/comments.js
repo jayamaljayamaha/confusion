@@ -11,7 +11,7 @@ export const Comments = (state = {
         case ActionTypes.ADD_COMMENTS:
             return {...state, errMsg: null, comments: action.payload};
         case ActionTypes.COMMENTS_FAILED:
-            return {...state, errMsg: action.payload, dishes: []};
+            return {...state, errMsg: action.payload, comments: []};
 
         default:
             return state;
